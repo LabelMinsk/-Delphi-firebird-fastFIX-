@@ -1,0 +1,851 @@
+SET TERM ^ ;
+
+create or alter procedure "2_VDG_UPD" (
+    ID_NAR integer)
+returns (
+    NOM_ABON integer,
+    FIO varchar(50),
+    PUNKT varchar(40),
+    UL varchar(60),
+    ADRES varchar(150),
+    DOM varchar(12),
+    KB varchar(5),
+    KORPUS integer,
+    DATADOG date,
+    MARKA_PL varchar(20),
+    MODEL_PL varchar(20),
+    IZGOTOV_PL varchar(20),
+    GOD_IGOT_PL varchar(4),
+    N_VID_PL varchar(20),
+    ZAV_NOM_PL varchar(20),
+    MARKA_BPG varchar(20),
+    MODEL_BPG varchar(20),
+    IZGOTOV_BPG varchar(20),
+    GOD_IGOT_BPG char(4),
+    ZAV_NOM_BPG varchar(20),
+    MARKA_K varchar(20),
+    MODEL_K varchar(20),
+    IZGOTOV_K varchar(20),
+    GOD_IGOT_K varchar(4),
+    ZAV_NOM_K varchar(20),
+    N_VID_K varchar(20),
+    MARKA_REG varchar(20),
+    MODEL_REG varchar(20),
+    IZGOTOV_REG varchar(20),
+    GOD_IGOT_REG varchar(4),
+    ZAV_NOM_REG varchar(20),
+    POK_SCH integer,
+    MARKA_SCH varchar(20),
+    MODEL_SCH varchar(30),
+    IZGOTOV_SCH varchar(40),
+    GOD_IGOT_SCH varchar(4),
+    ZAV_NOM_SCH varchar(25),
+    DATE_POV date,
+    N_DATE_POV char(7),
+    N_DATE_POS char(200),
+    KOD_PODV_PL integer,
+    GOD_PODV_PL char(6),
+    DLINA_PODV_PL char(6),
+    N_VIP_PODV_PL varchar(20),
+    IZG_PODV_PL varchar(40),
+    KOD_PODV_BPG integer,
+    GOD_PODV_BPG char(6),
+    DLINA_PODV_BPG char(6),
+    N_VIP_PODV_BPG varchar(20),
+    IZG_PODV_BPG varchar(40),
+    KOD_PODV_KOT integer,
+    GOD_PODV_KOT char(6),
+    DLINA_PODV_KOT char(6),
+    N_VIP_PODV_KOT varchar(20),
+    IZG_PODV_KOT varchar(40),
+    KOD_PODV_SCH integer,
+    GOD_PODV_SCH char(6),
+    DLINA_PODV_SCH char(6),
+    N_VIP_PODV_SCH varchar(20),
+    IZG_PODV_SCH varchar(40),
+    N_DOM varchar(6),
+    N_INF_TO varchar(70),
+    N_VID_PL2 varchar(10),
+    N_VIP_PODV_PL2 varchar(20),
+    IZG_PODV_PL2 varchar(30),
+    GOD_PODV_PL2 varchar(6),
+    DLINA_PODV_PL2 varchar(6),
+    MARKA_PL2 varchar(20),
+    MODEL_PL2 varchar(20),
+    IZGOTOV_PL2 varchar(20),
+    GOD_IGOT_PL2 varchar(15),
+    ZAV_NOM_PL2 varchar(30),
+    N_VID_PL1 varchar(10),
+    MARKA_PL1 varchar(20),
+    MODEL_PL1 varchar(20),
+    IZGOTOV_PL1 varchar(20),
+    GOD_IGOT_PL1 varchar(4),
+    ZAV_NOM_PL1 varchar(20),
+    GOD_PODV_PL1 varchar(6),
+    DLINA_PODV_PL1 varchar(6),
+    N_VIP_PODV_PL1 varchar(20),
+    IZG_PODV_PL1 varchar(20),
+    PLOMB varchar(25),
+    DATE_UDOST_PROV_VK varchar(10),
+    NOM_UDOST_PROV_VK varchar(20),
+    MARKA_SIGN_UG_GAZA varchar(30),
+    MODEL_SIGN_UG_GAZA varchar(30),
+    VID_EM_KLAPAN varchar(30),
+    MARKA_EM_KLAPAN varchar(30),
+    MODEL_EM_KLAPAN char(30),
+    IZGOTOV_EM_KLAPAN varchar(30),
+    PHONE varchar(100),
+    N_OST_DIAGN_PL varchar(30),
+    N_OST_DIAGN_BPG varchar(30),
+    N_OST_DIAGN_KOTEL varchar(30),
+    DATE_OST_DIAGN_PL date,
+    DATE_OST_DIAGN_BPG date,
+    DATE_OST_DIAGN_KOTEL date,
+    FIO_INSTR varchar(1000),
+    STATUS_PL varchar(1),
+    STATUS_BPG varchar(1),
+    STATUS_K varchar(1),
+    STATUS_REG varchar(1),
+    STATUS_SCH varchar(1),
+    MAGN_PLOMB varchar(100),
+    PLOMB_SH_MEH varchar(100),
+    ISPOLN varchar(100),
+    SUM_ISXOST decimal(15,2),
+    SUM_ISXOST_TO varchar(50),
+    STATUS_PRED integer,
+    PRED_DATE_NATH date,
+    PRED_DATE_KON date,
+    TIP_PRIB varchar(100),
+    SUM_BXOST decimal(15,2),
+    NEW_PARAM integer,
+    SUM_NAHISL decimal(15,2),
+    SUM_OPLATA decimal(15,2),
+    SUM_PERESH decimal(15,2),
+    PRIZ integer,
+    N_SUM_ISXOST varchar(50),
+    N_SUM_ISXOST_TO varchar(50),
+    DOGOVOR varchar(50))
+as
+declare variable VID_PL integer;
+declare variable VID_BPG integer;
+declare variable VID_K integer;
+declare variable MES integer;
+declare variable GOD integer;
+declare variable NMES char(2);
+declare variable DATE_POS char(10);
+declare variable KOL_OTKL_PLIT integer;
+declare variable DATE_OTKL_PLIT char(10);
+declare variable KOL_OTKL_BPG integer;
+declare variable DATE_OTKL_BPG char(10);
+declare variable KOL_OTKL_KOTEL integer;
+declare variable DATE_OTKL_KOTEL char(10);
+declare variable ID_ABON integer;
+declare variable VID_GAZA integer;
+declare variable N_PREDP varchar(100);
+declare variable KOL_UDOST integer;
+declare variable NOM_UDOST varchar(25);
+declare variable SUM_DOL_TO decimal(15,2);
+declare variable KOL_PLIT integer;
+declare variable I integer;
+declare variable NAL_UDOST_PROV_VK integer;
+declare variable KOL_SIGN_UG_GAZA integer;
+declare variable VID_SIGN_UG_GAZA varchar(30);
+declare variable KOL_EM_KLAPAN integer;
+begin
+--ID_NAR=35;
+
+for select s.nom_abon,trim(s.fio),
+ SP.NAI_PUNKT
+,trim((VU.NAI_VU||SU.NAI_UL)) as UL
+,(S.DOM||coalesce(S.DOM2,'')) as dom
+,trim(S.KB), s.korpus,
+ (trim(SP.NAI_PUNKT)||','||trim(VU.NAI_VU)||trim(SU.NAI_UL)) as ADRES, s.DATADOG, n.vid_gaza,n.id_abon, s.dom,l.sum_isxost_to,
+ s.kol_plit, (select pc.PHONE from pc_phone(s.nom_abon) pc) as PHONE, l.sum_isxost, l.sum_bxost, l.sum_nahisl, l.sum_oplata,
+ l.sum_peresh, l.sum_isxost_to, s.priz,iif(s.data_new is null, 'Да','Нет')
+ from spr_abon s,SP_PUNKT SP, SP_UL SU, SP_VU VU, nar_zad_vdg n, licev l
+ where 1=1
+ and s.nom_abon=l.nom_abon
+ and n.id_nar=:ID_NAR
+ AND S.KOD_PUNKT=SP.KOD_PUNKT
+ AND S.KOD_UL=SU.KOD_UL
+ AND S.KOD_VU=VU.KOD_VU
+ and s.nom_abon=n.nom_abon
+ and coalesce(n.vid_gaza,0)!=2
+ --and s.nom_abon=12365
+ union
+ select s.nom_abon,trim(s.fio),
+ SP.NAI_PUNKT
+,trim((VU.NAI_VU||SU.NAI_UL)) as UL
+,(S.DOM||coalesce(S.DOM2,'')) as dom
+,trim(S.KB), s.korpus,
+ (trim(SP.NAI_PUNKT)||','||trim(VU.NAI_VU)||trim(SU.NAI_UL)) as ADRES, s.data_dog, n.vid_gaza,n.id_abon, s.dom,l.sum_isxost_to,
+ s.kol_plit, s.tel,
+ 0 as sum_isxost, 0 as sum_bxost, 0 as sum_nahisl, 0 as sum_oplata,  0 as sum_peresh, 0 as sum_isxost_to, 0 as priz,''
+ from bal_spr_abon s,SP_PUNKT SP, SP_UL SU, SP_VU VU, nar_zad_vdg n, licev l
+ where 1=1
+ and s.nom_abon=l.nom_abon
+ and n.id_nar=:ID_NAR
+ AND S.KOD_PUNKT=SP.KOD_PUNKT
+ AND S.KOD_UL=SU.KOD_UL
+ AND S.KOD_VU=VU.KOD_VU
+ and s.id=n.id_abon
+ and coalesce(n.vid_gaza,0)=2
+-- order by s.kod_punkt, s.kod_vu, s.kod_ul, s.dom, s.dom2, cast(s.kb as integer)
+
+into :NOM_ABON, :FIO, :PUNKT, :UL,:DOM,:KB,:KORPUS,:ADRES,:DATADOG,:vid_gaza,:id_abon, :n_dom, :SUM_DOL_TO, :KOL_PLIT, :phone,
+ :sum_isxost, :sum_bxost, :sum_nahisl, :sum_oplata,  :sum_peresh, :sum_isxost_to, :priz,:DOGOVOR
+
+do begin
+VID_PL=0; MARKA_PL=''; MODEL_PL=''; IZGOTOV_PL=''; GOD_IGOT_PL=0; ZAV_NOM_PL=''; N_VID_PL='';
+VID_BPG=0; MARKA_BPG=''; MODEL_BPG=''; IZGOTOV_BPG=''; GOD_IGOT_BPG=0; ZAV_NOM_BPG='';
+VID_K=0; MARKA_K=''; MODEL_K=''; IZGOTOV_K=''; GOD_IGOT_K=0; ZAV_NOM_K=''; N_VID_K='';
+MARKA_REG=''; MODEL_REG=''; IZGOTOV_REG=''; GOD_IGOT_REG=0; ZAV_NOM_REG='';
+MARKA_SCH=''; MODEL_SCH=''; IZGOTOV_SCH=''; GOD_IGOT_SCH=0; ZAV_NOM_SCH=''; POK_SCH=0;
+N_DATE_POS='';
+N_DATE_POV='';
+vid_gaza=coalesce(vid_gaza,0);
+SUM_DOL_TO=coalesce(SUM_DOL_TO,0);
+N_INF_TO=''; N_DATE_POS=''; NOM_UDOST='';
+N_VID_PL1=''; N_VID_PL2=''; N_PREDP=''; DATE_UDOST_PROV_VK=''; NOM_UDOST_PROV_VK='';
+N_SUM_ISXOST_TO='';  N_SUM_ISXOST='';
+
+KOD_PODV_PL=0; GOD_PODV_PL=0; DLINA_PODV_PL=0; N_VIP_PODV_PL=''; IZG_PODV_PL='';
+KOD_PODV_BPG=0; GOD_PODV_BPG=0; DLINA_PODV_BPG=0; N_VIP_PODV_BPG=''; IZG_PODV_BPG='';
+KOD_PODV_KOT=0; GOD_PODV_KOT=0; DLINA_PODV_KOT=0; N_VIP_PODV_KOT=''; IZG_PODV_KOT='';
+KOD_PODV_SCH=0; GOD_PODV_SCH=0; DLINA_PODV_SCH=0; N_VIP_PODV_SCH=''; IZG_PODV_SCH='';
+N_OST_DIAGN_PL=''; N_OST_DIAGN_BPG=''; N_OST_DIAGN_KOTEL=''; FIO_INSTR='';
+STATUS_PL=''; STATUS_BPG=''; STATUS_K=''; STATUS_REG=''; STATUS_SCH='';
+MAGN_PLOMB=''; PLOMB_SH_MEH=''; ISPOLN=''; STATUS_PRED =0;
+PRED_DATE_NATH=null;PRED_DATE_KON=null;TIP_PRIB = '';
+
+sum_isxost=coalesce(sum_isxost,0);
+sum_bxost=coalesce(sum_bxost,0);
+sum_nahisl=coalesce(sum_nahisl,0);
+sum_oplata=coalesce(sum_oplata,0);
+sum_peresh=coalesce(sum_peresh,0);
+sum_isxost_to=coalesce(sum_isxost_to,0);
+
+if (SUM_DOL_TO>0) then
+begin
+N_INF_TO='ТО '||:SUM_DOL_TO||'р.';
+end
+
+--природный, сжиженный газ
+if (VID_GAZA!=2) then
+begin
+    select list(trim(s.fio)||' ('||iif(s.date_rogd is not null, (Current_date - s.date_rogd)/365,'...')||' лет)')  as FIO_INSTR
+    from spr_gilzi s
+    LEFT OUTER JOIN spr_abon sa on sa.nom_abon=s.nom_abon
+    where s.nom_abon=:NOM_ABON
+    and ((s.date_rogd is null) or ((s.date_rogd is not null) and (Current_date - s.date_rogd)/365>=12))
+    and
+    (select count(*) from gurnal_instruktag g where g.nom_abon=s.nom_abon and g.kod_gilca=s.kod)=0
+
+    into :FIO_INSTR;
+
+    --дата последнего посещения
+    select max(a.date_pos) from visit_abon a where a.nom_abon=:NOM_ABON into :DATE_POS;
+    if (DATE_POS is not null) then
+    begin
+   -- N_DATE_POS='д/пос.'||:DATE_POS;
+    end
+
+   SELECT first 1 ( trim( (select k.naim_kod from klsfct k where k.kod = 69 and k.kod_hc = g.tip_pr))||' до '||
+    g.date_kon) as PREDP
+    FROM GURNAL_PRED g
+    where g.nom_abon = :nom_abon
+    and g.stat = 0
+    order by g.date_nath desc
+    into :N_PREDP;
+
+    if ((N_PREDP is not null) and (N_PREDP!='')) then
+    begin
+    N_DATE_POS='предп.'||trim(N_PREDP);
+    end
+
+    select first 1 s.date_nath||',№'||s.nom_udostov from sp_udost s where s.nom_abon=:NOM_ABON and s.kod_udost=1 into :NOM_UDOST;
+
+    if ((NOM_UDOST is not null) and (NOM_UDOST!='')) then
+    begin
+      N_DATE_POS=trim(N_DATE_POS)||'уд.на сам.пров.дым. и вент.кан.'||NOM_UDOST;
+    end
+    i=0;
+
+    --получим информацию по плитам
+    for select spv.kod_vidpr,trim(sp.marka),trim(sp.model),trim(sp.izgotov),
+    extract(year from f.date_izgot) as GOD_IZGOT,left(trim(f.zav_nom),20),f.kod_podv,
+    f.god_podv, f.dlina_podv, f.date_ost_diagn, f.status
+    from f_plit f, spr_plit sp,sp_vidprib spv
+    where 1=1
+    and f.nom_abon=:NOM_ABON
+    and f.kod_pl=sp.kod_plit
+   -- and f.status='+'
+    and spv.kod_vidpr=sp.vid_prib
+    into :VID_PL, :MARKA_PL, :MODEL_PL, :IZGOTOV_PL, :GOD_IGOT_PL, :ZAV_NOM_PL, :KOD_PODV_PL, :GOD_PODV_PL,
+    :DLINA_PODV_PL,:date_ost_diagn_pl,:status_pl
+
+    do begin
+     --остаточный срок службы плиты
+     if (date_ost_diagn_pl is not null) then
+     begin
+     N_OST_DIAGN_PL='ост.срок '||date_ost_diagn_pl;
+     end
+
+   --информация по 1-ой плите-----------------------------------------------
+       if (i=0) then
+       begin
+        if (VID_PL=1) then N_VID_PL1='ПГ-2';
+        if (VID_PL=2) then N_VID_PL1='ПГ-4';
+        if (VID_PL=3) then N_VID_PL1='ПГ-3';
+        if (VID_PL=4) then N_VID_PL1='ПГ-1';
+        if (VID_PL=5) then N_VID_PL1='ПГ-5';
+        
+        MARKA_PL1=MARKA_PL; MODEL_PL1=MODEL_PL; IZGOTOV_PL1=IZGOTOV_PL; GOD_IGOT_PL1=GOD_IGOT_PL;
+        ZAV_NOM_PL1=ZAV_NOM_PL;
+
+            if (KOD_PODV_PL>0) then
+            begin
+                GOD_PODV_PL1=GOD_PODV_PL; DLINA_PODV_PL1=DLINA_PODV_PL;
+
+                select first 1 k.naim_kod, sp.izgotov from sp_podvodka sp, klsfct k
+                where sp.kod_podv=:KOD_PODV_PL and k.kod=85 and k.kod_hc=sp.kod_vid
+                into :N_VIP_PODV_PL1,:IZG_PODV_PL1;
+        
+                if (coalesce(N_VIP_PODV_PL1,'')!='') then
+                begin
+                N_VIP_PODV_PL1='/'||N_VIP_PODV_PL1;
+                end
+        
+                if (coalesce(IZG_PODV_PL1,'')!='') then
+                begin
+                IZG_PODV_PL1='/'||IZG_PODV_PL1;
+                end
+        
+                if (coalesce(GOD_PODV_PL1,'')!='') then
+                begin
+                GOD_PODV_PL1='/'||GOD_PODV_PL1;
+                end
+        
+                if (coalesce(DLINA_PODV_PL1,'')!='') then
+                begin
+                DLINA_PODV_PL1='/'||DLINA_PODV_PL1;
+                end
+            end
+       end
+
+       --информация по 2-ой плите-----------------------------------------------
+       if (i=1) then
+       begin
+        if (VID_PL=1) then N_VID_PL2='/ПГ-2';
+        if (VID_PL=2) then N_VID_PL2='/ПГ-4';
+        if (VID_PL=3) then N_VID_PL2='/ПГ-3';
+        if (VID_PL=4) then N_VID_PL2='/ПГ-1';
+        if (VID_PL=5) then N_VID_PL2='/ПГ-5';
+        
+        MARKA_PL2='\'||MARKA_PL; MODEL_PL2=MODEL_PL; IZGOTOV_PL2=IZGOTOV_PL; GOD_IGOT_PL2='\2-я ПГ-'||GOD_IGOT_PL;
+        ZAV_NOM_PL2='\2-я ПГ-'||ZAV_NOM_PL;
+
+            if (KOD_PODV_PL>0) then
+            begin
+                GOD_PODV_PL2=GOD_PODV_PL; DLINA_PODV_PL2=DLINA_PODV_PL;
+
+                select k.naim_kod, sp.izgotov from sp_podvodka sp, klsfct k
+                where sp.kod_podv=:KOD_PODV_PL and k.kod=85 and k.kod_hc=sp.kod_vid
+                into :N_VIP_PODV_PL2,:IZG_PODV_PL2;
+        
+                if (coalesce(N_VIP_PODV_PL2,'')!='') then
+                begin
+                N_VIP_PODV_PL2='/'||N_VIP_PODV_PL2;
+                end
+        
+                if (coalesce(IZG_PODV_PL2,'')!='') then
+                begin
+                IZG_PODV_PL2='/'||IZG_PODV_PL2;
+                end
+        
+                if (coalesce(GOD_PODV_PL2,'')!='') then
+                begin
+                GOD_PODV_PL2='/'||GOD_PODV_PL2;
+                end
+        
+                if (coalesce(DLINA_PODV_PL2,'')!='') then
+                begin
+                DLINA_PODV_PL2='/'||DLINA_PODV_PL2;
+                end
+            end
+       end
+       -------------------------------------------------------------------------
+        i=i+1;
+    end
+
+    --получим информацию по отключенной плите
+    select count(*)
+    from spr_abon s
+    where 1=1
+    and (select count(*) from f_plit f where f.nom_abon=s.nom_abon)=1
+    and (select count(*) from f_plit f where f.nom_abon=s.nom_abon and f.status='-')=1
+    and s.nom_abon=:nom_abon into :KOL_OTKL_PLIT;
+    
+    if (KOL_OTKL_PLIT>0) then
+    begin
+    select first 1  f.date_otkl from f_plit f where f.nom_abon=:NOM_ABON and f.status='-' into :date_otkl_plit;
+    N_VID_PL='отключена'; MARKA_PL='дата откл.'||:date_otkl_plit;
+    MODEL_PL=''; IZGOTOV_PL=''; ZAV_NOM_PL='';
+    end
+    
+    if (N_VID_PL1='') then
+    begin
+    select first 1 trim(sp.marka),trim(sp.model),trim(sp.izgotov),
+    extract(year from f.date_izgot) as GOD_IZGOT,left(trim(f.zav_nom),20), f.kod_podv,f.god_podv,
+    f.dlina_podv, f.date_ost_diagn, f.status
+    from f_other_prib f, spr_var_pov sp,sp_vidprib spv
+    where f.nom_abon=:NOM_ABON
+    and f.kod_prib=sp.kod_pov
+    --and f.status='+'
+    and spv.kod_vidpr=sp.vid_prib
+    and f.vid_prib=63
+    into :MARKA_PL, :MODEL_PL, :IZGOTOV_PL, :GOD_IGOT_PL, :ZAV_NOM_PL, :KOD_PODV_PL, :GOD_PODV_PL, :DLINA_PODV_PL,
+    :DATE_OST_DIAGN_PL,:STATUS_PL;
+    N_VID_PL='вар.пов.';
+
+    --остаточный срок службы плиты
+     if (date_ost_diagn_pl is not null) then
+     begin
+     N_OST_DIAGN_PL='ост.срок '||date_ost_diagn_pl;
+     end
+
+    if (GOD_IGOT_PL='0') then
+    begin
+    GOD_IGOT_PL='';
+    end
+
+    if (KOD_PODV_PL>0) then
+    begin
+        select first 1 k.naim_kod, sp.izgotov from sp_podvodka sp, klsfct k
+        where sp.kod_podv=:KOD_PODV_PL and k.kod=85 and k.kod_hc=sp.kod_vid
+        into :N_VIP_PODV_PL,:IZG_PODV_PL;
+    end
+    N_VID_PL1=N_VID_PL;
+    MARKA_PL1=MARKA_PL;
+    MODEL_PL1=MODEL_PL;
+    ZAV_NOM_PL1=ZAV_NOM_PL;
+    IZGOTOV_PL1=IZGOTOV_PL;
+    GOD_IGOT_PL1=GOD_IGOT_PL;
+    end
+
+
+    --получим информацию по ВПГ
+    select first 1 spv.kod_vidpr,trim(sp.marka),trim(sp.model),trim(sp.izgotov),
+    extract(year from f.date_izgot) as GOD_IZGOT,left(trim(f.zav_nom),20), f.kod_podv,f.god_podv, f.dlina_podv,
+    f.date_ost_diagn, f.status
+    from f_bpg f, sp_bpg sp,sp_vidprib spv
+    where 1=1
+    and f.nom_abon=:NOM_ABON
+    and f.kod_bpg=sp.kod_bpg
+    --and f.status='+'
+    and spv.kod_vidpr=sp.vid_prib
+    into :VID_BPG, :MARKA_BPG, :MODEL_BPG, :IZGOTOV_BPG, :GOD_IGOT_BPG, :ZAV_NOM_BPG, :KOD_PODV_BPG,
+    :GOD_PODV_BPG, :DLINA_PODV_BPG, :DATE_OST_DIAGN_BPG,:STATUS_BPG;
+    
+    --остаточный срок службы ВПГ
+     if (DATE_OST_DIAGN_BPG is not null) then
+     begin
+     N_OST_DIAGN_BPG='ост.срок '||DATE_OST_DIAGN_BPG;
+     end
+
+    if (GOD_IGOT_BPG='0') then
+    begin
+    GOD_IGOT_BPG='';
+    end
+
+    if (KOD_PODV_BPG>0) then
+    begin
+        select first 1 k.naim_kod, sp.izgotov from sp_podvodka sp, klsfct k
+        where sp.kod_podv=:KOD_PODV_BPG and k.kod=85 and k.kod_hc=sp.kod_vid
+        into :N_VIP_PODV_BPG,:IZG_PODV_BPG;
+
+        if (coalesce(N_VIP_PODV_BPG,'')!='') then
+        begin
+        N_VIP_PODV_BPG='/'||N_VIP_PODV_BPG;
+        end
+        if (coalesce(IZG_PODV_BPG,'')!='') then
+        begin
+        IZG_PODV_BPG='/'||IZG_PODV_BPG;
+        end
+
+        if (coalesce(GOD_PODV_BPG,'')!='') then
+        begin
+        GOD_PODV_BPG='/'||GOD_PODV_BPG;
+        end
+
+        if (coalesce(DLINA_PODV_BPG,'')!='') then
+        begin
+        DLINA_PODV_BPG='/'||DLINA_PODV_BPG;
+        end
+    end
+
+    --получим информацию по отключенной ВПГ
+    select count(*)
+    from spr_abon s
+    where 1=1
+    and (select count(*) from f_bpg f where f.nom_abon=s.nom_abon)=1
+    and (select count(*) from f_bpg f where f.nom_abon=s.nom_abon and f.status='-')=1
+    and s.nom_abon=:nom_abon into :KOL_OTKL_BPG;
+    
+    if (KOL_OTKL_BPG>0) then
+    begin
+    select first 1  f.date_otkl from f_bpg f where f.nom_abon=:NOM_ABON and f.status='-' into :date_otkl_bpg;
+     MARKA_BPG='отключена';
+     MODEL_BPG='дата откл.'; IZGOTOV_BPG=:date_otkl_bpg; ZAV_NOM_BPG='';
+    end
+    
+    --получим информацию по котлам
+    select first 1 spv.kod_vidpr,trim(sp.marka),trim(sp.model),trim(sp.izgotov),
+    extract(year from f.date_izgot) as GOD_IZGOT
+    ,left(trim(f.zav_nom),20), f.kod_podv,f.god_podv, f.dlina_podv, f.date_ost_diagn, f.status
+    from f_kotel f, spr_kotel sp,sp_vidprib spv
+    where 1=1
+    and f.nom_abon=:NOM_ABON
+    and f.kod_kotel=sp.kod_kotel
+    --and f.status='+'
+    and spv.kod_vidpr=sp.vid_prib
+    into :VID_K, :MARKA_K, :MODEL_K, :IZGOTOV_K, :GOD_IGOT_K, :ZAV_NOM_K, :KOD_PODV_KOT, :GOD_PODV_KOT,
+    :DLINA_PODV_KOT, :DATE_OST_DIAGN_KOTEL,:STATUS_K;
+    
+    if (GOD_IGOT_K='0') then
+    begin
+    GOD_IGOT_K='';
+    end
+
+    if (KOD_PODV_KOT>0) then
+    begin
+        select first 1 k.naim_kod, sp.izgotov from sp_podvodka sp, klsfct k
+        where sp.kod_podv=:KOD_PODV_KOT and k.kod=85 and k.kod_hc=sp.kod_vid
+        into :N_VIP_PODV_KOT,:IZG_PODV_KOT;
+
+        if (coalesce(N_VIP_PODV_KOT,'')!='') then
+        begin
+        N_VIP_PODV_KOT='/'||N_VIP_PODV_KOT;
+        end
+        if (coalesce(IZG_PODV_KOT,'')!='') then
+        begin
+        IZG_PODV_KOT='/'||IZG_PODV_KOT;
+        end
+
+        if (coalesce(GOD_PODV_KOT,'')!='') then
+        begin
+        GOD_PODV_KOT='/'||GOD_PODV_KOT;
+        end
+
+        if (coalesce(DLINA_PODV_KOT,'')!='') then
+        begin
+        DLINA_PODV_KOT='/'||DLINA_PODV_KOT;
+        end
+    end
+
+    if (VID_K=10) then N_VID_K='одн.';
+    if (VID_K=11) then N_VID_K='двк.';
+    
+    --получим информацию по отключенному котлу
+    select count(*)
+    from spr_abon s
+    where 1=1
+    and (select count(*) from f_kotel f where f.nom_abon=s.nom_abon)=1
+    and (select count(*) from f_kotel f where f.nom_abon=s.nom_abon and f.status='-')=1
+    and s.nom_abon=:nom_abon into :KOL_OTKL_KOTEL;
+    
+    if (KOL_OTKL_KOTEL>0) then
+    begin
+    select first 1  f.date_otkl from f_kotel f where f.nom_abon=:NOM_ABON and f.status='-' into :date_otkl_kotel;
+     N_VID_K='отключен'; MARKA_K='дата откл.';
+     MODEL_K=:date_otkl_bpg; IZGOTOV_K=''; ZAV_NOM_K='';
+    end
+    
+      --остаточный срок службы котла
+     if (DATE_OST_DIAGN_KOTEL is not null) then
+     begin
+     N_OST_DIAGN_KOTEL='ост.срок '||DATE_OST_DIAGN_KOTEL;
+     end
+
+    --домовой регулятор давления
+    select first 1 trim(sp.marka),trim(sp.model),trim(sp.izgotov),
+    extract(year from f.date_izgot) as GOD_IZGOT,left(trim(f.zav_nom),20),f.status
+    from f_other_prib f, spr_dom_reg sp,sp_vidprib spv
+    where f.nom_abon=:NOM_ABON
+    and f.kod_prib=sp.kod_reg
+    --and f.status='+'
+    and spv.kod_vidpr=sp.vid_prib
+    and f.vid_prib=71
+    into :MARKA_REG, :MODEL_REG, :IZGOTOV_REG, :GOD_IGOT_REG, :ZAV_NOM_REG,:STATUS_REG;
+    
+    if (GOD_IGOT_REG='0') then
+    begin
+    GOD_IGOT_REG='';
+    end
+
+    --счетчик
+    select first 1 trim(sp.marka),trim(sp.model),trim(sp.izgotov),
+    extract(year from f.date_izgot) as GOD_IZGOT, left(trim(f.zav_nom),20),l.pok_usl, f.date_povr,
+    f.kod_podv,f.god_podv, f.dlina_podv, f.plomb, f.status, f.magn_plomb, f.plomb_sh_meh, 
+    (select kl.naim_kod from klsfct kl where kl.kod = 24 and kl.kod_hc = f.ispoln)
+    from shethik f, sp_schet sp,sp_vidprib spv, licev l
+    where 1=1
+    and f.nom_abon=:NOM_ABON
+    and f.kod_sht=sp.kod_sht
+    --and f.status='+'
+    and f.nom_abon=l.nom_abon
+    and spv.kod_vidpr=sp.vid_prib
+    into :MARKA_SCH, :MODEL_SCH, :IZGOTOV_SCH, :GOD_IGOT_SCH, :ZAV_NOM_SCH, :POK_SCH, :DATE_POV, :KOD_PODV_SCH,
+     :GOD_PODV_SCH, :DLINA_PODV_SCH, :PLOMB, :STATUS_SCH,:MAGN_PLOMB,:PLOMB_SH_MEH,:ISPOLN;
+
+    if (iif(:PLOMB is null,'',:plomb)!='') then
+    begin
+    MODEL_SCH=trim(MODEL_SCH);--||',№пломбы='||trim(PLOMB);
+    end
+
+
+
+    if (GOD_IGOT_SCH='0') then
+    begin
+    GOD_IGOT_SCH='';
+    end
+
+    N_DATE_POV='';
+    
+    if (KOD_PODV_SCH>0) then
+    begin
+        select first 1 k.naim_kod, sp.izgotov from sp_podvodka sp, klsfct k
+        where sp.kod_podv=:KOD_PODV_SCH and k.kod=85 and k.kod_hc=sp.kod_vid
+        into :N_VIP_PODV_SCH,:IZG_PODV_SCH;
+
+        if (coalesce(N_VIP_PODV_SCH,'')!='') then
+        begin
+        N_VIP_PODV_SCH='/'||N_VIP_PODV_SCH;
+        end
+        if (coalesce(IZG_PODV_SCH,'')!='') then
+        begin
+        IZG_PODV_SCH='/'||IZG_PODV_SCH;
+        end
+
+        if (coalesce(GOD_PODV_SCH,'')!='') then
+        begin
+        GOD_PODV_SCH='/'||GOD_PODV_SCH;
+        end
+
+        if (coalesce(DLINA_PODV_SCH,'')!='') then
+        begin
+        DLINA_PODV_SCH='/'||DLINA_PODV_SCH;
+        end
+    end
+
+    if (DATE_POV is not null) then
+    begin
+    /*MES=right(left(DATE_POV,5),2);
+    GOD=right(DATE_POV,4);
+    N_DATE_POV=MES||'.'||GOD; */
+    MES=extract(month from DATE_POV);
+    GOD=extract(year from DATE_POV);
+    
+    if (MES<10) then
+    begin
+    NMES='0'||MES;
+    end
+    
+    if (MES>=10) then
+    begin
+    NMES=MES;
+    end
+    
+    N_DATE_POV=NMES||'.'||GOD;
+    end
+end
+
+if (VID_GAZA=2) then
+begin
+    select first 1 spv.kod_vidpr,trim(sp.marka),trim(sp.model),trim(sp.izgotov),
+    extract(year from f.dat_izgot) as GOD_IZGOT,left(trim(f.zav_nom),20), f.status
+    from bal_f_prib f, spr_plit sp,sp_vidprib spv
+    where 1=1
+    and f.id_abon=:ID_ABON
+    and f.kod_prib=sp.kod_plit
+    and f.status='+'
+    and spv.kod_vidpr=sp.vid_prib
+    and f.tip_prib=3
+    into :VID_PL, :MARKA_PL, :MODEL_PL, :IZGOTOV_PL, :GOD_IGOT_PL, :ZAV_NOM_PL, :STATUS_PL;
+
+    if (GOD_IGOT_PL='0') then
+    begin
+    GOD_IGOT_PL='';
+    end
+
+    if (VID_PL=1) then N_VID_PL='ПГ-2';
+    if (VID_PL=2) then N_VID_PL='ПГ-4';
+    if (VID_PL=3) then N_VID_PL='ПГ-3';
+    if (VID_PL=4) then N_VID_PL='ПГ-1';
+    if (VID_PL=5) then N_VID_PL='ПГ-5';
+
+    N_DATE_POS='бал.газ, '||left(trim(FIO),20);
+
+end
+
+if (GOD_PODV_PL='0') then
+begin
+GOD_PODV_PL='';
+end
+
+if (GOD_PODV_BPG='0') then
+begin
+GOD_PODV_BPG='';
+end
+
+if (GOD_PODV_KOT='0') then
+begin
+GOD_PODV_KOT='';
+end
+
+if (GOD_PODV_SCH='0') then
+begin
+GOD_PODV_SCH='';
+end
+
+if (dlina_podv_pl='0') then
+begin
+dlina_podv_pl='';
+end
+
+if (dlina_podv_bpg='0') then
+begin
+dlina_podv_bpg='';
+end
+
+if (dlina_podv_kot='0') then
+begin
+dlina_podv_kot='';
+end
+
+if (dlina_podv_sch='0') then
+begin
+dlina_podv_sch='';
+end
+
+if (zav_nom_pl='0') then
+begin
+zav_nom_pl='';
+end
+
+if (zav_nom_bpg='0') then
+begin
+zav_nom_bpg='';
+end
+
+if (zav_nom_k='0') then
+begin
+zav_nom_k='';
+end
+
+if (zav_nom_sch='0') then
+begin
+zav_nom_sch='';
+end
+
+if (zav_nom_reg='0') then
+begin
+zav_nom_reg='';
+end
+
+--наличие акта проверки состояния дымовых и вент.каналов
+select count(*) from sp_udost s where s.nom_abon=:nom_abon and s.kod_udost=1 into :NAL_UDOST_PROV_VK;
+
+if (NAL_UDOST_PROV_VK>0) then
+begin
+select first 1 s.date_nath, s.nom_udostov from sp_udost s where s.nom_abon=:nom_abon and s.kod_udost=1 into :DATE_UDOST_PROV_VK,:NOM_UDOST_PROV_VK;
+end
+
+--сигнализатор угарного газа--------------------------------------------------
+select count(*) from f_other_prib f where f.nom_abon=:nom_abon and f.vid_prib=76 into :KOL_SIGN_UG_GAZA;
+
+  if (KOL_SIGN_UG_GAZA>0) then
+   begin
+   select first 1 spv.nai_vidpr,sp.marka,sp.model
+   from f_other_prib f, spr_signal sp,sp_vidprib spv
+   where f.nom_abon=:nom_abon and f.kod_prib=sp.kod_sign and f.status='+'
+   and spv.kod_vidpr=sp.vid_prib
+   into :VID_SIGN_UG_GAZA,:MARKA_SIGN_UG_GAZA,:MODEL_SIGN_UG_GAZA;
+   end
+--электромагнитный клапан
+select count(*) from f_other_prib f where f.nom_abon=:nom_abon and f.vid_prib=79 into :KOL_EM_KLAPAN;
+   VID_EM_KLAPAN=''; MARKA_EM_KLAPAN=''; MODEL_EM_KLAPAN=''; IZGOTOV_EM_KLAPAN='';
+
+   if (KOL_EM_KLAPAN>0) then
+   begin
+   select first 1 spv.nai_vidpr,sp.marka,sp.model, sp.izgotov
+   from f_other_prib f, spr_em_klapan sp,sp_vidprib spv
+   where f.nom_abon=:nom_abon and f.kod_prib=sp.kod and f.status='+'
+   and spv.kod_vidpr=sp.vid_prib
+   into :VID_EM_KLAPAN,:MARKA_EM_KLAPAN,:MODEL_EM_KLAPAN,:IZGOTOV_EM_KLAPAN;
+   end
+
+--долг за ГАЗ+ТО
+   if (SUM_ISXOST > 0) then
+   begin    
+     if (priz=1) then
+     begin
+         N_SUM_ISXOST= 'ГАЗ ' || SUM_ISXOST ||' руб.';
+     end
+
+     if ((priz=3) and (sum_bxost-SUM_OPLATA+SUM_PERESH>0)) then
+     begin
+         SUM_ISXOST=sum_bxost-SUM_OPLATA+SUM_PERESH;
+         N_SUM_ISXOST= 'ГАЗ ' || SUM_ISXOST ||' руб.';
+     end
+   end
+
+    if (SUM_ISXOST_TO > 0) then
+    begin
+    N_SUM_ISXOST_TO= 'ТО ' ||SUM_ISXOST_TO ||' руб.';
+    end
+
+
+suspend;
+end
+
+end^
+
+SET TERM ; ^
+
+/* Следующие операторы GRANT сгенерированы автоматически */
+
+GRANT EXECUTE ON PROCEDURE PC_PHONE TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON SPR_ABON TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON SP_PUNKT TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON SP_UL TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON SP_VU TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON NAR_ZAD_VDG TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON LICEV TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON BAL_SPR_ABON TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON SPR_GILZI TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON GURNAL_INSTRUKTAG TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON VISIT_ABON TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON KLSFCT TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON GURNAL_PRED TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON SP_UDOST TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON F_PLIT TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON SPR_PLIT TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON SP_VIDPRIB TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON SP_PODVODKA TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON F_OTHER_PRIB TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON SPR_VAR_POV TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON F_BPG TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON SP_BPG TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON F_KOTEL TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON SPR_KOTEL TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON SPR_DOM_REG TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON SHETHIK TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON SP_SCHET TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON BAL_F_PRIB TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON SPR_SIGNAL TO PROCEDURE "2_VDG_UPD";
+GRANT SELECT ON SPR_EM_KLAPAN TO PROCEDURE "2_VDG_UPD";
+
+/* Существующие привилегии на эту процедуру */
+
+GRANT EXECUTE ON PROCEDURE "2_VDG_UPD" TO SYSDBA;
