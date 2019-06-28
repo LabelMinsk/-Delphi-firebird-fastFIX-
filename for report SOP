@@ -1,0 +1,189 @@
+SET TERM ^ ;
+
+create or alter procedure PC_OBSERV_SOP (
+    DATE_FIRST date,
+    DATE_LAST date)
+returns (
+    COUNT_SOP_NATURAL integer,
+    COUNT_SOP_BALLON integer,
+    TOTAL_SOP integer,
+    COUNT_SOP_PEOPLE_NATURAL integer,
+    COUNT_SOP_PEOPLE_BALLON integer,
+    TOTAL_SOP_PEOPLE integer,
+    COUNT_ORDER_TOTAL_NATURAL integer,
+    COUNT_ORDER_COMPLETE_NATURAL integer,
+    COUNT_ORDER_FALSE_NATURAL integer,
+    COUNT_ORDER_TOTAL_BALLON integer,
+    COUNT_ORDER_COMPLETE_BALLON integer,
+    COUNT_ORDER_FALSE_BALLON integer,
+    COUNT_TOTAL_PRED integer,
+    COUNT_TOTAL_COMPLETE_PRED integer,
+    COUNT_TOTAL_FALSE_PRED integer,
+    COUNT_PEOPLE_INSTR_N integer,
+    COUNT_PEOPLE_INSTR_BALLON integer,
+    TOTAL_PEOPLE_INSTR integer,
+    KOL_SIGN_ZAG integer,
+    KOL_SIGN_UG integer,
+    KOL_EL integer,
+    D_FIRST date,
+    D_LAST date,
+    COUNT_TOTAL_SOP_PEOPLE_N integer,
+    COUNT_TOTAL_SOP_PEOPLE_B integer,
+    TOTAL_SOP_P integer,
+    COUNT_EQUIPMENT_SHUTDOWN integer,
+    COUNT_EQUIPMENT_TURNINGON integer)
+as
+begin
+   D_FIRST=:DATE_FIRST;
+   D_LAST=:DATE_LAST;
+
+   ---------------всего лицевых------------
+   select count(sop.nom_abon) from gurnal_sop sop
+   --where sop.date_nath between :DATE_FIRST and :DATE_LAST
+   into :COUNT_SOP_NATURAL;
+
+   select count(sop.id_abon) from bal_gurnal_sop sop
+   --where sop.date_nath between :DATE_FIRST and :DATE_LAST
+   into :COUNT_SOP_BALLON;
+
+   TOTAL_SOP = COUNT_SOP_NATURAL + COUNT_SOP_BALLON;
+              ---всего человек---------
+   select count(spr.kod) from gurnal_sop sop
+   inner join spr_gilzi spr on (spr.nom_abon = sop.nom_abon)
+   into :COUNT_TOTAL_SOP_PEOPLE_N;
+
+   select count(bal.kol_jil) from bal_gurnal_sop sop
+   inner join BAL_SPR_ABON bal on (bal.nom_abon = sop.id_abon)
+   into :COUNT_TOTAL_SOP_PEOPLE_B;
+
+   TOTAL_SOP_P = COUNT_TOTAL_SOP_PEOPLE_N + COUNT_TOTAL_SOP_PEOPLE_B;
+               --------кол-во человек в период-------------
+   select count(spr.kod) from gurnal_sop sop
+   inner join spr_gilzi spr on (spr.nom_abon = sop.nom_abon)
+   where spr.date_vip between :DATE_FIRST and :DATE_LAST
+   into :COUNT_SOP_PEOPLE_NATURAL;
+
+   select count(bal.kol_jil) from bal_gurnal_sop sop
+   inner join BAL_SPR_ABON bal on (bal.nom_abon = sop.id_abon)
+   where sop.date_checkup between :DATE_FIRST and :DATE_LAST
+   into :COUNT_SOP_PEOPLE_BALLON;
+
+   TOTAL_SOP_PEOPLE =  COUNT_SOP_PEOPLE_NATURAL + COUNT_SOP_PEOPLE_BALLON;
+
+   ------------------------------Определяем кол-во предписаний у СОП-------------------------------------
+                  --Природный
+  --всего
+  select count(pred.nom_abon)
+  from gurnal_sop sop
+  inner join gurnal_pred pred on(pred.nom_abon = sop.nom_abon)
+  where pred.date_nath between :DATE_FIRST and :DATE_LAST
+  into :COUNT_ORDER_TOTAL_NATURAL;
+
+  --Выполнено
+  select count(pred.nom_abon)
+  from gurnal_sop sop
+  inner join gurnal_pred pred on(pred.nom_abon = sop.nom_abon)
+  where pred.date_kon between :DATE_FIRST and :DATE_LAST
+  and pred.stat = 1
+  into :COUNT_ORDER_COMPLETE_NATURAL;
+
+  --Не выполнено
+  select count(pred.nom_abon)
+  from gurnal_sop sop
+  inner join gurnal_pred pred on(pred.nom_abon = sop.nom_abon)
+  where pred.date_kon between :DATE_FIRST and :DATE_LAST
+  and pred.stat = 0
+  into :COUNT_ORDER_FALSE_NATURAL;
+
+                  --СУГ
+  --всего
+  select count(pred.nom_abon)
+  from bal_gurnal_sop sop
+  inner join gurnal_pred_balon pred on(pred.nom_abon = sop.id_abon)
+  where pred.date_nath  between :DATE_FIRST and :DATE_LAST
+  into :COUNT_ORDER_TOTAL_BALLON;
+  --Выполнено
+  select count(pred.nom_abon)
+  from bal_gurnal_sop sop
+  inner join gurnal_pred_balon pred on(pred.nom_abon = sop.id_abon)
+  where pred.date_kon between :DATE_FIRST and :DATE_LAST
+  and pred.stat = 1
+  into :COUNT_ORDER_COMPLETE_BALLON;
+
+  --Не выполнено
+  select count(pred.nom_abon)
+  from bal_gurnal_sop sop
+  inner join gurnal_pred_balon pred on(pred.nom_abon = sop.id_abon)
+  where pred.date_kon between :DATE_FIRST and :DATE_LAST
+  and pred.stat = 0
+  into :COUNT_ORDER_FALSE_BALLON;
+
+  COUNT_TOTAL_PRED =  COUNT_ORDER_TOTAL_NATURAL + COUNT_ORDER_TOTAL_BALLON;
+  COUNT_TOTAL_COMPLETE_PRED = COUNT_ORDER_COMPLETE_NATURAL + COUNT_ORDER_COMPLETE_BALLON;
+  COUNT_TOTAL_FALSE_PRED = COUNT_ORDER_FALSE_NATURAL + COUNT_ORDER_FALSE_BALLON;
+
+   ------------------------------Определяем кол-во чел прошедших инструктаж------------------------------------
+  select count(b.nom_abon)
+  from gurnal_sop sop
+  inner join gurnal_instruktag b on(b.nom_abon = sop.nom_abon)
+  where b.date_prov between :DATE_FIRST and :DATE_LAST
+  into :COUNT_PEOPLE_INSTR_N;
+
+  COUNT_PEOPLE_INSTR_BALLON = 0;
+  select count(b.id_abon)
+  from bal_gurnal_sop sop
+  inner join gurnal_instruktag_ball b on(b.id_abon = sop.id_abon)
+  where b.date_prov between :DATE_FIRST and :DATE_LAST
+  into :COUNT_PEOPLE_INSTR_BALLON;
+
+  TOTAL_PEOPLE_INSTR = COUNT_PEOPLE_INSTR_BALLON + COUNT_PEOPLE_INSTR_N;
+
+
+  -------------------------------------Сигнализаторы-----------------------------------------------------------
+
+  select
+  sum((select count(*) from f_other_prib o where o.nom_abon=g.nom_abon and o.vid_prib=77)),
+  sum((select count(*) from f_other_prib o where o.nom_abon=g.nom_abon and o.vid_prib=76)),
+  sum((select count(*) from f_other_prib o where o.nom_abon=g.nom_abon and o.vid_prib=79))
+  from gurnal_sop g
+  inner join spr_abon sa on (sa.nom_abon=g.nom_abon)
+  into :KOL_SIGN_ZAG, :KOL_SIGN_UG, :KOL_EL;
+
+
+   ------------------------------Определяем отключенное оборудование------------------------------------
+  --Всего отключено
+  select count(b.nom_abon)
+  from gurnal_sop sop
+  inner join b_otkl b on(b.nom_abon = sop.nom_abon)
+  where b.date_otkl  between :DATE_FIRST and :DATE_LAST
+  into :COUNT_EQUIPMENT_SHUTDOWN;
+
+  --Подключено
+  select count(b.nom_abon)
+  from gurnal_sop sop
+  inner join b_otkl b on(b.nom_abon = sop.nom_abon)
+  where b.date_vkl  between :DATE_FIRST and :DATE_LAST
+  into :COUNT_EQUIPMENT_TURNINGON;
+
+  suspend;
+end^
+
+SET TERM ; ^
+
+/* Следующие операторы GRANT сгенерированы автоматически */
+
+GRANT SELECT ON GURNAL_SOP TO PROCEDURE PC_OBSERV_SOP;
+GRANT SELECT ON BAL_GURNAL_SOP TO PROCEDURE PC_OBSERV_SOP;
+GRANT SELECT ON SPR_GILZI TO PROCEDURE PC_OBSERV_SOP;
+GRANT SELECT ON BAL_SPR_ABON TO PROCEDURE PC_OBSERV_SOP;
+GRANT SELECT ON GURNAL_PRED TO PROCEDURE PC_OBSERV_SOP;
+GRANT SELECT ON GURNAL_PRED_BALON TO PROCEDURE PC_OBSERV_SOP;
+GRANT SELECT ON GURNAL_INSTRUKTAG TO PROCEDURE PC_OBSERV_SOP;
+GRANT SELECT ON GURNAL_INSTRUKTAG_BALL TO PROCEDURE PC_OBSERV_SOP;
+GRANT SELECT ON F_OTHER_PRIB TO PROCEDURE PC_OBSERV_SOP;
+GRANT SELECT ON SPR_ABON TO PROCEDURE PC_OBSERV_SOP;
+GRANT SELECT ON B_OTKL TO PROCEDURE PC_OBSERV_SOP;
+
+/* Существующие привилегии на эту процедуру */
+
+GRANT EXECUTE ON PROCEDURE PC_OBSERV_SOP TO SYSDBA;
